@@ -1,12 +1,9 @@
 "use client";
 
+import { signIn } from "@/lib/firebase/firebaseActions";
+import { LoggableAccount } from "@/lib/types";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
-
-type FormValues = {
-    username: string;
-    password: string;
-};
 
 export default function LoginForm() {
     const {
@@ -14,11 +11,13 @@ export default function LoginForm() {
         handleSubmit,
         formState: { errors },
         reset,
-    } = useForm<FormValues>();
+    } = useForm<LoggableAccount>();
 
-    console.log(errors);
+    const onSubmit: SubmitHandler<LoggableAccount> = async (data, e) => {
+        e?.preventDefault();
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
+        await signIn(data);
+    };
 
     return (
         <>
@@ -30,7 +29,7 @@ export default function LoginForm() {
                     <div>
                         <input
                             type="text"
-                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1 text-sm placeholder:text-black placeholder:opacity-50"
+                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 font-['Roboto'] text-sm placeholder:text-black placeholder:opacity-50"
                             aria-label="Username"
                             placeholder="Username"
                             {...register("username", {
@@ -46,7 +45,7 @@ export default function LoginForm() {
                     <div>
                         <input
                             type="password"
-                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1 text-sm placeholder:text-black placeholder:opacity-50"
+                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 font-['Roboto'] text-sm placeholder:text-black placeholder:opacity-50"
                             aria-label="Password"
                             placeholder="Password"
                             {...register("password", {

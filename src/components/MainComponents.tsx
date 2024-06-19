@@ -8,7 +8,8 @@ import NewPost from "./home/NewPost";
 import PostForm from "./home/PostForm";
 
 /* Login */
-import LoginForm from "./login/LoginForm";
+import LoginForm from "./auth/LoginForm";
+import RegisterForm from "./auth/RegisterForm";
 
 export {
     Sidebar,
@@ -18,5 +19,6 @@ export {
     NewPost,
     PostForm,
 
-    LoginForm
+    LoginForm,
+    RegisterForm
 };
