@@ -45,7 +45,7 @@ export async function signInWithCredentials(data: LoggableAccount) {
         const docData = docSnapshot.data();
         const user: Account = {
             email: docData.email,
-            fullName: docData.fullName,
+            displayName: docData.displayName,
             username: docData.username
         }
 

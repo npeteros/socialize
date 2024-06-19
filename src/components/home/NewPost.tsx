@@ -13,7 +13,7 @@ import { PostForm } from "@/components/MainComponents";
 export default function NewPost() {
     return (
         <Dialog>
-            <div className="flex justify-between border-b border-neutral-800 px-6 py-4">
+            <div className="flex justify-between border-b border-neutral-800 px-6 py-2">
                 <div className="flex w-full items-center gap-4">
                     <Avatar>
                         <AvatarImage src="https://randomuser.me/api/portraits/men/7.jpg" />

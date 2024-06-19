@@ -71,6 +71,22 @@ export default function RegisterForm() {
                         <input
                             type="text"
                             className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-sm placeholder:text-black placeholder:opacity-50"
+                            aria-label="Display Name"
+                            placeholder="Display Name"
+                            {...register("displayName", {
+                                required: "This field is required",
+                            })}
+                        />
+                        {errors.displayName && (
+                            <span className="text-xs text-red-500">
+                                {errors.displayName.message}
+                            </span>
+                        )}
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-sm placeholder:text-black placeholder:opacity-50"
                             aria-label="Username"
                             placeholder="Username"
                             {...register("username", {
@@ -81,38 +97,6 @@ export default function RegisterForm() {
                         {errors.username && (
                             <span className="text-xs text-red-500">
                                 {errors.username.message}
-                            </span>
-                        )}
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-sm placeholder:text-black placeholder:opacity-50"
-                            aria-label="First Name"
-                            placeholder="First Name"
-                            {...register("fullName.firstName", {
-                                required: "This field is required",
-                            })}
-                        />
-                        {errors.fullName?.firstName && (
-                            <span className="text-xs text-red-500">
-                                {errors.fullName?.firstName.message}
-                            </span>
-                        )}
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-sm placeholder:text-black placeholder:opacity-50"
-                            aria-label="Last Name"
-                            placeholder="Last Name"
-                            {...register("fullName.lastName", {
-                                required: "This field is required",
-                            })}
-                        />
-                        {errors.fullName?.lastName && (
-                            <span className="text-xs text-red-500">
-                                {errors.fullName?.lastName.message}
                             </span>
                         )}
                     </div>

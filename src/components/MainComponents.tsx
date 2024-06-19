@@ -1,3 +1,5 @@
+import AuthLayout from "./AuthLayout";
+
 /* Navigation */
 import Sidebar from "./nav/Sidebar";
 import NavLink from "./nav/NavLink";
@@ -11,7 +13,12 @@ import PostForm from "./home/PostForm";
 import LoginForm from "./auth/LoginForm";
 import RegisterForm from "./auth/RegisterForm";
 
+/* Profile */
+import ProfileView from "./profile/ProfileView";
+
 export {
+    AuthLayout,
+
     Sidebar,
     NavLink,
     Menu,
@@ -20,5 +27,7 @@ export {
     PostForm,
 
     LoginForm,
-    RegisterForm
+    RegisterForm,
+
+    ProfileView,
 };

@@ -4,7 +4,7 @@ import Link from 'next/link'
 export default function Sidebar() {
 
     return (
-        <div className="flex flex-col min-h-screen w-20 items-center py-4 justify-between">
+        <div className="fixed flex flex-col min-h-screen w-20 items-center py-4 justify-between">
             <div>
                 <Link
                     href='/'
@@ -13,7 +13,7 @@ export default function Sidebar() {
                     S
                 </Link>
             </div>
-            <div className="flex flex-col gap-4 w-full items-center">
+            <div className="flex flex-col gap-2 w-full items-center">
                 <NavLink
                     link="/"
                 >

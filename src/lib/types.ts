@@ -5,17 +5,11 @@ export interface LoggableAccount {
 
 export interface RegisterableAccount extends LoggableAccount {
     email: string;
-    fullName: {
-        firstName: string;
-        lastName: string;
-    };
+    displayName: string
 }
 
 export interface Account {
     username: string;
     email: string;
-    fullName: {
-        firstName: string;
-        lastName: string;
-    }
+    displayName: string
 }

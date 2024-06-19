@@ -11,7 +11,7 @@ export default function Menu() {
     const dispatch = useAppDispatch();
 
     return (
-        <div className="relative my-12 text-white">
+        <div className="relative text-white">
             {showingMenu && (
                 <div className="absolute bottom-0 left-full mx-4 flex h-20 w-36 flex-col items-start justify-between rounded-xl bg-neutral-800">
                     <button className="w-full rounded-t-xl p-2 hover:bg-neutral-600">
@@ -22,7 +22,7 @@ export default function Menu() {
                             dispatch(signOut());
                             router.push("/login");
                         }}
-                        className="w-full rounded-b-xl p-2 hover:bg-neutral-600"
+                        className="w-full rounded-b-xl p-2 hover:bg-neutral-600 "
                     >
                         Sign Out
                     </button>
