@@ -10,3 +10,12 @@ export interface RegisterableAccount extends LoggableAccount {
         lastName: string;
     };
 }
+
+export interface Account {
+    username: string;
+    email: string;
+    fullName: {
+        firstName: string;
+        lastName: string;
+    }
+}

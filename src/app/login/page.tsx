@@ -1,3 +1,8 @@
+"use client";
+
+import { useAppSelector } from "@/lib/redux/hooks";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { LoginForm } from "@/components/MainComponents";
 import { Dancing_Script } from "next/font/google";
 import Link from "next/link";
@@ -7,6 +12,13 @@ const dancingScript = Dancing_Script({
 });
 
 export default function Login() {
+    const user = useAppSelector((state) => state.user);
+    const router = useRouter();    
+
+    useEffect(() => {
+        if (user.user && user.token) router.push("/");
+    }, []);
+
     return (
         <div className="min-h-screen bg-white">
             <div className="flex h-screen flex-col items-center justify-center gap-6">

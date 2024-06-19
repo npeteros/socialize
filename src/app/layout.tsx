@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Roboto } from "next/font/google";
+import ReduxProvider from "@/components/ReduxProvider";
 
 const roboto = Roboto({
     subsets: ["latin"],
@@ -20,7 +21,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${roboto.className} bg-neutral-950`}>
-                {children}
+                <ReduxProvider>
+                    {children}
+                </ReduxProvider>
             </body>
         </html>
     );

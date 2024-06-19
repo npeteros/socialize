@@ -1,9 +1,14 @@
 "use client";
 
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { signOut } from "@/lib/redux/reducers/userReducer";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Menu() {
     const [showingMenu, setShowingMenu] = useState(false);
+    const router = useRouter();
+    const dispatch = useAppDispatch();
 
     return (
         <div className="relative my-12 text-white">
@@ -12,7 +17,13 @@ export default function Menu() {
                     <button className="w-full rounded-t-xl p-2 hover:bg-neutral-600">
                         Settings
                     </button>
-                    <button className="w-full rounded-b-xl p-2 hover:bg-neutral-600">
+                    <button
+                        onClick={() => {
+                            dispatch(signOut());
+                            router.push("/login");
+                        }}
+                        className="w-full rounded-b-xl p-2 hover:bg-neutral-600"
+                    >
                         Sign Out
                     </button>
                 </div>

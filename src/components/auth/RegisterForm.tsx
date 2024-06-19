@@ -1,6 +1,6 @@
 "use client";
 
-import { signUp } from "@/lib/firebase/firebaseActions";
+import { signUp } from "@/lib/actions";
 import { RegisterableAccount } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

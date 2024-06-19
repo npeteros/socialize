@@ -1,8 +1,12 @@
 "use client";
 
-import { signIn } from "@/lib/firebase/firebaseActions";
+import { signInWithCredentials } from "@/lib/actions";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { logIn } from "@/lib/redux/reducers/userReducer";
 import { LoggableAccount } from "@/lib/types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function LoginForm() {
@@ -12,11 +16,29 @@ export default function LoginForm() {
         formState: { errors },
         reset,
     } = useForm<LoggableAccount>();
+    const [error, setError] = useState<string | undefined>("");
+    const router = useRouter();
+
+    const dispatch = useAppDispatch();
 
     const onSubmit: SubmitHandler<LoggableAccount> = async (data, e) => {
         e?.preventDefault();
 
-        await signIn(data);
+        const res = await signInWithCredentials(data);
+        if (res.status == 200) {
+            setError("");
+
+            const value = {
+                token: res.value.token,
+                user: res.value.user,
+            };
+            dispatch(logIn(value));
+            router.push("/");
+        } else {
+            const { value } = res;
+            reset();
+            setError(value.error);
+        }
     };
 
     return (
@@ -50,11 +72,6 @@ export default function LoginForm() {
                             placeholder="Password"
                             {...register("password", {
                                 required: "This field is required",
-                                minLength: {
-                                    value: 4,
-                                    message:
-                                        "Password must contain atleast 4 characters",
-                                },
                             })}
                         />
                         {errors.password && (
@@ -64,6 +81,7 @@ export default function LoginForm() {
                         )}
                     </div>
                 </div>
+                {error && <span className="text-xs text-red-500">{error}</span>}
                 <button
                     type="submit"
                     className="rounded-lg bg-[#4CB4F8] py-1 text-sm text-white"
