@@ -51,7 +51,7 @@ export default function LoginForm() {
                     <div>
                         <input
                             type="text"
-                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 font-['Roboto'] text-sm placeholder:text-black placeholder:opacity-50"
+                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-sm placeholder:text-black placeholder:opacity-50"
                             aria-label="Username"
                             placeholder="Username"
                             {...register("username", {
@@ -67,7 +67,7 @@ export default function LoginForm() {
                     <div>
                         <input
                             type="password"
-                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 font-['Roboto'] text-sm placeholder:text-black placeholder:opacity-50"
+                            className="w-full rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1.5 text-sm placeholder:text-black placeholder:opacity-50"
                             aria-label="Password"
                             placeholder="Password"
                             {...register("password", {

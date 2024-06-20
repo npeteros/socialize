@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Dialog,
     DialogContent,
@@ -7,27 +9,23 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PostForm } from "@/components/MainComponents";
+import { PostForm, UserAvatar } from "@/components/MainComponents";
 
 export default function NewPost() {
     return (
         <Dialog>
-            <div className="flex justify-between border-b border-neutral-800 px-6 py-2">
+            <div className="flex justify-between border-b border-neutral-700 px-6 py-4">
                 <div className="flex w-full items-center gap-4">
-                    <Avatar>
-                        <AvatarImage src="https://randomuser.me/api/portraits/men/7.jpg" />
-                        <AvatarFallback>Test User</AvatarFallback>
-                    </Avatar>
+                    <UserAvatar />
                     <DialogTrigger className="text-neutral-500">
                         Socialize...
                     </DialogTrigger>
                 </div>
-                <DialogTrigger className="flex items-center rounded-md border-2 border-neutral-800 px-4 text-white shadow-lg">
+                <DialogTrigger className="flex items-center rounded-md border-2 border-neutral-700 px-4 text-white shadow-lg">
                     Post
                 </DialogTrigger>
             </div>
-            <DialogContent className="border-neutral-800 bg-neutral-950">
+            <DialogContent className="border-neutral-700 bg-neutral-950">
                 <DialogHeader>
                     <DialogTitle className="text-white">New Post</DialogTitle>
                     <DialogDescription>What's on your mind?</DialogDescription>
@@ -178,7 +176,7 @@ export default function NewPost() {
                     </button>
                 </div>
                 <DialogFooter>
-                    <button className="rounded-lg border-2 border-neutral-800 px-4 py-2 text-white shadow-lg hover:border-black hover:bg-neutral-800">
+                    <button className="rounded-lg border-2 border-neutral-700 px-4 py-2 text-white shadow-lg hover:border-black hover:bg-neutral-800">
                         Post
                     </button>
                 </DialogFooter>

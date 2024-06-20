@@ -1,19 +1,18 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
+import UserAvatar from "./UserAvatar";
+import { useAppSelector } from "@/lib/redux/hooks";
 
 export default function PostForm() {
     const [post, setPost] = useState("");
+    const user = useAppSelector((state) => state.user.user);
     return (
         <>
             <div className="flex items-center gap-4">
-                <Avatar>
-                    <AvatarImage src="https://randomuser.me/api/portraits/men/7.jpg" />
-                    <AvatarFallback>Test User</AvatarFallback>
-                </Avatar>
+                <UserAvatar />
                 <div className="flex flex-col text-white">
-                    <span>Test User</span>
+                    <span>{user?.displayName}</span>
                     <input
                         type="text"
                         className="bg-transparent text-neutral-500 outline-none placeholder:text-neutral-500"

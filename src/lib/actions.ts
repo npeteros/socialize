@@ -1,14 +1,16 @@
 "use server";
 
-import { initFirebase, initFirestore } from "./firebase/firebase";
+import { initFirebase, initFirestore, initStorage } from "./firebase/firebase";
 import { collection, doc, getDoc, getDocs, or, query, setDoc, where } from "firebase/firestore";
 import { Account, LoggableAccount, RegisterableAccount } from "./types";
 import { compareSync, hashSync } from 'bcryptjs';
 import { v4 as uuidv4 } from "uuid";
 import { sign } from "jsonwebtoken";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const app = initFirebase();
 const db = initFirestore(app);
+const storage = initStorage(app);
 
 export async function checkUserExists(username: string, email: string) {
 
@@ -46,7 +48,9 @@ export async function signInWithCredentials(data: LoggableAccount) {
         const user: Account = {
             email: docData.email,
             displayName: docData.displayName,
-            username: docData.username
+            username: docData.username,
+            imgUrl: docData.imgUrl,
+            bio: docData.bio
         }
 
         const verified = compareSync(data.password, docData.password);
@@ -59,9 +63,16 @@ export async function signInWithCredentials(data: LoggableAccount) {
 }
 
 export async function signUp(formData: RegisterableAccount) {
-    const data = { ...formData, id: uuidv4() }
+    let data = { ...formData, id: uuidv4() }
     data.password = hashSync(data.password, 10);
+    data.bio = 'No bio.';
     let retVal = { status: 500, msg: '' }
+
+    const defaultProfileRef = ref(storage, 'profile-pictures/default.jpg');
+    await getDownloadURL(defaultProfileRef)
+        .then(url => {
+            data = { ...data, imgUrl: `${url}.jpg` }
+        })
 
     try {
         const existingUser = await checkUserExists(data.username, data.email);

@@ -8,13 +8,15 @@ import Menu from "./nav/Menu";
 /* Home */
 import NewPost from "./home/NewPost";
 import PostForm from "./home/PostForm";
+import UserAvatar from "./home/UserAvatar";
 
 /* Login */
 import LoginForm from "./auth/LoginForm";
 import RegisterForm from "./auth/RegisterForm";
 
 /* Profile */
-import ProfileView from "./profile/ProfileView";
+import ProfileHeader from "./profile/ProfileHeader";
+import EditProfile from "./profile/EditProfile";
 
 export {
     AuthLayout,
@@ -25,9 +27,11 @@ export {
 
     NewPost,
     PostForm,
+    UserAvatar,
 
     LoginForm,
     RegisterForm,
 
-    ProfileView,
+    ProfileHeader,
+    EditProfile,
 };

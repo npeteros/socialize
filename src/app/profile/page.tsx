@@ -1,9 +1,9 @@
-import { AuthLayout, ProfileView } from "@/components/MainComponents";
+import { AuthLayout, ProfileHeader } from "@/components/MainComponents";
 
 export default function Profile() {
     return (
         <AuthLayout>
-            <ProfileView />
+            <ProfileHeader />
         </AuthLayout>
     );
 }
