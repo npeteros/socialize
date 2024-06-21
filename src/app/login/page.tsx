@@ -12,13 +12,6 @@ const dancingScript = Dancing_Script({
 });
 
 export default function Login() {
-    const user = sampleUser;
-    const router = useRouter();    
-
-    useEffect(() => {
-        if (user) router.push("/");
-    }, [user, router]);
-
     return (
         <div className="min-h-screen bg-white">
             <div className="flex h-screen flex-col items-center justify-center gap-6">
