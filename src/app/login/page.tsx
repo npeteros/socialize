@@ -23,12 +23,12 @@ export default function Login() {
                     </span>
                     <LoginForm />
                 </div>
-                <div className="flex w-full max-w-96 items-center justify-center gap-1 border border-neutral-300 px-16 py-6 text-sm">
+                {/* <div className="flex w-full max-w-96 items-center justify-center gap-1 border border-neutral-300 px-16 py-6 text-sm">
                     <span>Don&apos;t have an account?</span>
                     <Link href="/register" className="text-[#4CB4F8]">
                         Sign up
                     </Link>
-                </div>
+                </div> */}
             </div>
         </div>
     );

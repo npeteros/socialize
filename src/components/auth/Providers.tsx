@@ -78,12 +78,10 @@ export function LoginCredentials() {
 
 export function LoginGithub() {
     const router = useRouter();
-    const session = useSession();
-    console.log(session);
 
     const onSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        await signInWithProvider("github")
+        // await signInWithProvider("github")
         return console.log("Github");
     };
 
