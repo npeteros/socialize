@@ -9,14 +9,14 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAppSelector } from "@/lib/redux/hooks";
 import { Account } from "@/lib/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UserAvatar } from "../MainComponents";
 import { useRef, useState } from "react";
+import { sampleUser } from "@/lib/placeholder-data";
 
-export default function EditProfile() {    
-    const user = useAppSelector((state) => state.user.user);
+export default function EditProfile() {
+    const user = sampleUser;
     const {
         register,
         handleSubmit,
@@ -30,7 +30,7 @@ export default function EditProfile() {
             imgUrl: String(user?.imgUrl),
         },
     });
-    
+
     const [fileSelected, setFileSelected] = useState<File>();
     const [preview, setPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);

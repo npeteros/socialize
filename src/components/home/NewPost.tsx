@@ -28,7 +28,7 @@ export default function NewPost() {
             <DialogContent className="border-neutral-700 bg-neutral-950">
                 <DialogHeader>
                     <DialogTitle className="text-white">New Post</DialogTitle>
-                    <DialogDescription>What's on your mind?</DialogDescription>
+                    <DialogDescription>What&apos;s on your mind?</DialogDescription>
                 </DialogHeader>
                 <PostForm />
                 <div className="mx-12 flex gap-4 text-neutral-500">

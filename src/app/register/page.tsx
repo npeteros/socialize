@@ -1,23 +1,23 @@
 "use client";
 
-import { useAppSelector } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { RegisterForm } from "@/components/MainComponents";
 import { Dancing_Script } from "next/font/google";
 import Link from "next/link";
+import { sampleUser } from "@/lib/placeholder-data";
 
 const dancingScript = Dancing_Script({
     subsets: ["latin"],
 });
 
 export default function Login() {
-    const user = useAppSelector((state) => state.user);
+    const user = sampleUser
     const router = useRouter();
 
     useEffect(() => {
-        if (user.user && user.token) router.push("/");
-    }, []);
+        if (user) router.push("/");
+    }, [user, router]);
 
     return (
         <div className="h-full min-h-lvh bg-white">

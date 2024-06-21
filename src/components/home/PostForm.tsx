@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import UserAvatar from "./UserAvatar";
-import { useAppSelector } from "@/lib/redux/hooks";
+import { sampleUser } from "@/lib/placeholder-data";
 
 export default function PostForm() {
     const [post, setPost] = useState("");
-    const user = useAppSelector((state) => state.user.user);
+    const user = sampleUser
     return (
         <>
             <div className="flex items-center gap-4">

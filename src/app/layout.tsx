@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ReduxProvider from "@/components/ReduxProvider";
 
 export const metadata: Metadata = {
     title: "Socialize",
@@ -14,9 +13,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="bg-neutral-950">
-                <ReduxProvider>{children}</ReduxProvider>
-            </body>
+            <body className="bg-neutral-950">{children}</body>
         </html>
     );
 }

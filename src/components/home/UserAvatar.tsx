@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAppSelector } from "@/lib/redux/hooks";
+import { sampleUser } from "@/lib/placeholder-data";
 
 export default function UserAvatar({
     src,
@@ -12,7 +12,7 @@ export default function UserAvatar({
     className?: string;
     onClick?: React.MouseEventHandler;
 }) {
-    const user = useAppSelector((state) => state.user.user);
+    const user = sampleUser;
     return (
         <Avatar className={className} onClick={onClick}>
             <AvatarImage src={src ? src : user?.imgUrl} />

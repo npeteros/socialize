@@ -1,21 +1,21 @@
 "use client";
 
-import { useAppSelector } from "@/lib/redux/hooks";
 import { Sidebar } from "./MainComponents";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { sampleUser } from "@/lib/placeholder-data";
 
 export default function AuthLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const user = useAppSelector((state) => state.user);
+    const user = sampleUser
     const router = useRouter();
 
     useEffect(() => {
-        if (!user.user || !user.token) router.push("/login");
-    }, []);
+        if (!user) router.push("/login");
+    }, [user, router]);
     return (
         <div className="flex">
             <Sidebar />

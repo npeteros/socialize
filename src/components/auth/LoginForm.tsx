@@ -1,8 +1,6 @@
 "use client";
 
 import { signInWithCredentials } from "@/lib/actions";
-import { useAppDispatch } from "@/lib/redux/hooks";
-import { logIn } from "@/lib/redux/reducers/userReducer";
 import { LoggableAccount } from "@/lib/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,8 +17,6 @@ export default function LoginForm() {
     const [error, setError] = useState<string | undefined>("");
     const router = useRouter();
 
-    const dispatch = useAppDispatch();
-
     const onSubmit: SubmitHandler<LoggableAccount> = async (data, e) => {
         e?.preventDefault();
 
@@ -32,7 +28,6 @@ export default function LoginForm() {
                 token: res.value.token,
                 user: res.value.user,
             };
-            dispatch(logIn(value));
             router.push("/");
         } else {
             const { value } = res;

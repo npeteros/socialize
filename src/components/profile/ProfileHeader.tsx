@@ -1,11 +1,11 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAppSelector } from "@/lib/redux/hooks";
 import EditProfile from "./EditProfile";
+import { sampleUser } from "@/lib/placeholder-data";
 
 export default function ProfileHeader() {
-    const user = useAppSelector((state) => state.user.user);    
+    const user = sampleUser    
 
     return (
         <div className="my-4 flex h-20 flex-col gap-8 px-6 text-white">
