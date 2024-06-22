@@ -1,11 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { LoginForm } from "@/components/MainComponents";
 import { Dancing_Script } from "next/font/google";
 import Link from "next/link";
-import { sampleUser } from "@/lib/placeholder-data";
 
 const dancingScript = Dancing_Script({
     subsets: ["latin"],

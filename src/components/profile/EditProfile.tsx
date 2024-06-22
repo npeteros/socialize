@@ -9,29 +9,54 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Account } from "@/lib/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UserAvatar } from "../MainComponents";
-import { useRef, useState } from "react";
-import { sampleUser } from "@/lib/placeholder-data";
+import { useEffect, useRef, useState } from "react";
+import { DocumentData } from "firebase/firestore";
+import { initAuth } from "@/lib/firebase";
+import { retrieveUserByID } from "@/lib/data";
+import { Account } from "@/lib/types";
+import { updateProfile } from "firebase/auth";
+import { useRouter } from "next/navigation";
+
+export interface AccountWithFile extends Account {
+    file?: File;
+}
 
 export default function EditProfile() {
-    const user = sampleUser;
+    const [user, setUser] = useState<DocumentData | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const auth = initAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        auth.authStateReady().then(async () => {
+            if (auth.currentUser) {
+                const userData = await retrieveUserByID(
+                    auth.currentUser.uid as string,
+                );
+                setUser(userData);
+            }
+        });
+    }, []);
+
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Account>({
+    } = useForm<AccountWithFile>({
         values: {
-            username: String(user?.username),
-            bio: String(user?.bio),
-            displayName: String(user?.displayName),
-            email: String(user?.email),
-            imgUrl: String(user?.imgUrl),
+            username: user?.username as string,
+            bio: user?.bio as string,
+            displayName: user?.displayName as string,
+            email: user?.email as string,
+            imgUrl: user?.imgUrl as string,
         },
     });
 
-    const [fileSelected, setFileSelected] = useState<File>();
+    const [fileSelected, setFileSelected] = useState<File | undefined>(
+        undefined,
+    );
     const [preview, setPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,10 +76,45 @@ export default function EditProfile() {
             reader.readAsDataURL(file);
         }
     };
-    const onSubmit: SubmitHandler<Account> = async (data, e) => {};
+
+    const onSubmit: SubmitHandler<AccountWithFile> = async (data) => {
+        setLoading(true);
+        const formData = new FormData();
+        if (fileSelected) {
+            formData.append("file", fileSelected);
+        }
+        formData.append("uid", auth.currentUser?.uid as string);
+        formData.append("data", JSON.stringify(data));
+
+        const response = await fetch("/api/editProfile", {
+            method: "PATCH",
+            body: formData,
+        });
+
+        if (response.ok) {
+            const data: Account = await response.json();
+            if (auth.currentUser) {
+                await updateProfile(auth?.currentUser, {
+                    displayName: data.displayName,
+                    photoURL: data.imgUrl,
+                });
+            }
+        } else {
+            console.error("Failed to upload file");
+        }
+
+        setLoading(false);
+    };
 
     return (
-        <Dialog>
+        <Dialog
+            onOpenChange={(props) => {
+                if (!props) {
+                    setFileSelected(undefined);
+                    setPreview(null);
+                }
+            }}
+        >
             <DialogTrigger className="rounded-lg border border-neutral-700 py-1 font-semibold">
                 Edit profile
             </DialogTrigger>
@@ -76,7 +136,7 @@ export default function EditProfile() {
                             </label>
                             <input
                                 type="text"
-                                className="bg-transparent text-neutral-500 focus:outline-none"
+                                className="bg-transparent text-neutral-300 focus:outline-none"
                                 {...register("username", {
                                     required: "This field is required",
                                 })}
@@ -95,23 +155,23 @@ export default function EditProfile() {
                                 ref={fileInputRef}
                                 hidden
                             />
-                            <button onClick={uploadFile}>
+                            <button type="button" onClick={uploadFile}>
                                 <UserAvatar
                                     src={preview ? preview : user?.imgUrl}
-                                    className="size-16 object-contain"
+                                    className="size-20"
                                 />
                             </button>
                         </div>
                     </div>
                     <div className="flex w-full flex-col gap-1 border-b border-neutral-700 py-4">
                         <label htmlFor="Display Name">Display Name</label>
-                        {/* <input
+                        <input
                             type="text"
-                            className="bg-transparent text-neutral-500 focus:outline-none"
+                            className="bg-transparent text-neutral-300 focus:outline-none"
                             {...register("displayName", {
                                 required: "This field is required",
                             })}
-                        /> */}
+                        />
                         {errors.displayName && (
                             <span className="text-xs text-red-500">
                                 {errors.displayName.message}
@@ -122,7 +182,7 @@ export default function EditProfile() {
                         <label htmlFor="Bio">Bio</label>
                         <input
                             type="text"
-                            className="bg-transparent text-neutral-500 focus:outline-none"
+                            className="bg-transparent text-neutral-300 focus:outline-none"
                             {...register("bio", {
                                 required: "This field is required",
                             })}
@@ -136,9 +196,10 @@ export default function EditProfile() {
                     <DialogFooter>
                         <button
                             type="submit"
-                            className="mt-4 w-full rounded-xl bg-white py-4 font-semibold text-black"
+                            disabled={loading}
+                            className={`mt-4 w-full rounded-xl py-4 font-semibold text-black ${loading ? "bg-neutral-700" : "bg-white"}`}
                         >
-                            Done
+                            {loading ? "Saving..." : "Done"}
                         </button>
                     </DialogFooter>
                 </form>

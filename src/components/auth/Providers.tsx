@@ -12,9 +12,11 @@ import {
     signInWithPopup,
     updateProfile,
 } from "firebase/auth";
-import { initAuth } from "@/lib/firebase";
-import { retrieveUserByEmail, storeOAuthUser } from "@/lib/actions";
+import { initAuth, initFirestore, initStorage } from "@/lib/firebase";
+import { storeOAuthUser } from "@/lib/actions";
 import { Account, AccountWithID } from "@/lib/types";
+import { getDownloadURL, ref } from "firebase/storage";
+import { retrieveUserByID } from "@/lib/data";
 
 interface FieldValues extends Account {
     password: string;
@@ -39,7 +41,7 @@ export function LoginEmail() {
             .then(async (userCredential) => {
                 const user = userCredential.user;
                 if (user.email) {
-                    const userData = await retrieveUserByEmail(user.email);
+                    const userData = await retrieveUserByID(user.uid);
                     if (userData) {
                         await updateProfile(user, {
                             displayName: userData.displayName,
@@ -116,19 +118,33 @@ export function LoginGoogle() {
         const auth = initAuth();
 
         await signInWithPopup(auth, provider)
-            .then(async (result) => {              
+            .then(async (result) => {
                 const user = result.user;
                 if (!user.email || !user.photoURL || !user.displayName) return;
+
                 const userData: AccountWithID = {
                     displayName: user.displayName,
                     email: user.email,
                     id: user.uid,
                     imgUrl: user.photoURL,
-                    username: user.displayName.replace(" ", ""),
-                    bio: 'No bio'
+                    username: user.displayName.replace(/\s+/g, "").toLowerCase(),
+                    bio: "No bio.",
                 };
                 await storeOAuthUser(userData)
-                    .then(() => router.push("/"))
+                    .then(async () => {
+                        const storage = initStorage();
+                        const avatarsRef = ref(
+                            storage,
+                            `avatars/${user.uid}/avatar.jpg`,
+                        );
+                        await getDownloadURL(avatarsRef).then((url) => {
+                            updateProfile(user, {
+                                photoURL: url,
+                            });
+                        });
+
+                        router.push("/");
+                    })
                     .catch((err) => console.error(err));
             })
             .catch((error) => {

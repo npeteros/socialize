@@ -1,5 +1,3 @@
-"use client";
-
 import {
     Dialog,
     DialogContent,
@@ -10,13 +8,16 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { PostForm, UserAvatar } from "@/components/MainComponents";
+import { Suspense } from "react";
 
 export default function NewPost() {
     return (
         <Dialog>
             <div className="flex justify-between border-b border-neutral-700 px-6 py-4">
                 <div className="flex w-full items-center gap-4">
-                    <UserAvatar />
+                    <Suspense fallback={<p>Loading user...</p>}>
+                        <UserAvatar />
+                    </Suspense>
                     <DialogTrigger className="text-neutral-500">
                         Socialize...
                     </DialogTrigger>
@@ -28,7 +29,9 @@ export default function NewPost() {
             <DialogContent className="border-neutral-700 bg-neutral-950">
                 <DialogHeader>
                     <DialogTitle className="text-white">New Post</DialogTitle>
-                    <DialogDescription>What&apos;s on your mind?</DialogDescription>
+                    <DialogDescription>
+                        What&apos;s on your mind?
+                    </DialogDescription>
                 </DialogHeader>
                 <PostForm />
                 <div className="mx-12 flex gap-4 text-neutral-500">

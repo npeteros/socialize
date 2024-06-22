@@ -2,16 +2,15 @@
 
 import { storeEmailUser } from "@/lib/actions";
 import { initAuth } from "@/lib/firebase";
-import { Account } from "@/lib/types";
+import { AccountWithID } from "@/lib/types";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface FormValues extends Account {
+interface FormValues extends AccountWithID {
     password: string;
     confirmPass?: string;
-    id: string;
 }
 
 export default function RegisterForm() {

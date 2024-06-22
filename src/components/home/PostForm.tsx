@@ -2,11 +2,20 @@
 
 import { useState } from "react";
 import UserAvatar from "./UserAvatar";
-import { sampleUser } from "@/lib/placeholder-data";
+import { User } from "firebase/auth";
+import { initAuth } from "@/lib/firebase";
 
 export default function PostForm() {
     const [post, setPost] = useState("");
-    const user = sampleUser
+    const [user, setUser] = useState<User | null>(null);
+    const auth = initAuth();
+
+    auth.authStateReady().then(() => {
+        if (auth.currentUser) {
+            setUser(auth.currentUser);
+        }
+    });
+
     return (
         <>
             <div className="flex items-center gap-4">

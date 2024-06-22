@@ -1,21 +1,26 @@
-"use client";
+'use client';
 
+import { initAuth } from "@/lib/firebase";
 import { Sidebar } from "./MainComponents";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { sampleUser } from "@/lib/placeholder-data";
+import { useRouter } from "next/navigation";
 
 export default function AuthLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const user = sampleUser
-    const router = useRouter();
+    const auth = initAuth();
+    const router = useRouter()
 
     useEffect(() => {
-        if (!user) router.push("/login");
-    }, [user, router]);
+        auth.authStateReady().then(() => {
+            if (!auth.currentUser) {
+                router.push('/login')
+            }
+        });
+    }, []);
+
     return (
         <div className="flex">
             <Sidebar />
