@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
 import { initAuth } from "@/lib/firebase";
 import { Sidebar } from "./MainComponents";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { User } from "firebase/auth";
+import AuthLayoutSkeleton from "./skeletons/AuthLayoutSkeleton";
 
 export default function AuthLayout({
     children,
@@ -11,17 +13,17 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     const auth = initAuth();
-    const router = useRouter()
+    const router = useRouter();
+    const [user, setUser] = useState<User>();
 
     useEffect(() => {
-        auth.authStateReady().then(() => {
-            if (!auth.currentUser) {
-                router.push('/login')
-            }
+        auth.authStateReady().finally(() => {
+            if (!auth.currentUser) return router.push("/login");
+            else setUser(auth.currentUser);
         });
-    }, []);
+    }, [auth, router]);
 
-    return (
+    return !user ? <AuthLayoutSkeleton /> : (
         <div className="flex">
             <Sidebar />
             <main className="flex w-full justify-center pt-12">

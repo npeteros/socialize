@@ -38,7 +38,7 @@ export default function EditProfile() {
                 setUser(userData);
             }
         });
-    }, []);
+    }, [auth]);
 
     const {
         register,
