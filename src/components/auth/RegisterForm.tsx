@@ -1,7 +1,7 @@
 "use client";
 
 import { addUserToFirestore } from "@/lib/actions";
-import { initAuth } from "@/lib/firebase/firebase";
+import { initAuth } from "@/lib/firebase";
 import { LoggableAccount } from "@/lib/types";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";

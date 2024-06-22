@@ -12,7 +12,7 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
 } from "firebase/auth";
-import { initAuth } from "@/lib/firebase/firebase";
+import { initAuth } from "@/lib/firebase";
 
 export function LoginEmail() {
     const {

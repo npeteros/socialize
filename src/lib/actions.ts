@@ -1,6 +1,6 @@
 "use server";
 
-import { initFirestore, initStorage } from "./firebase/firebase";
+import { initFirestore, initStorage } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { LoggableAccount } from "./types";
 import { hashSync } from 'bcryptjs';
