@@ -1,11 +1,14 @@
 "use client";
 
+import { initAuth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Menu() {
     const [showingMenu, setShowingMenu] = useState(false);
     const router = useRouter();
+    const auth = initAuth();
 
     return (
         <div className="relative text-white">
@@ -16,9 +19,16 @@ export default function Menu() {
                     </button>
                     <button
                         onClick={() => {
-                            router.push("/login");
+                            signOut(auth)
+                                .then(() => {
+                                    router.push("/login");
+                                })
+                                .catch((error) => {
+                                    console.error("Error signing out: ", error);
+                                    
+                                });
                         }}
-                        className="w-full rounded-b-xl p-2 hover:bg-neutral-600 "
+                        className="w-full rounded-b-xl p-2 hover:bg-neutral-600"
                     >
                         Sign Out
                     </button>

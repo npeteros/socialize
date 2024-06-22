@@ -1,6 +1,5 @@
 "use client";
 
-import { LoggableAccount } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -11,29 +10,44 @@ import {
     GoogleAuthProvider,
     signInWithEmailAndPassword,
     signInWithPopup,
+    updateProfile,
 } from "firebase/auth";
 import { initAuth } from "@/lib/firebase";
+import { retrieveUserByEmail, storeOAuthUser } from "@/lib/actions";
+import { Account, AccountWithID } from "@/lib/types";
+
+interface FieldValues extends Account {
+    password: string;
+}
 
 export function LoginEmail() {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoggableAccount>({
+    } = useForm<FieldValues>({
         resolver: zodResolver(signInSchema),
     });
     const [error, setError] = useState<boolean>(false);
     const router = useRouter();
 
-    const onSubmit: SubmitHandler<LoggableAccount> = (data) => {
+    const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setError(false);
         const auth = initAuth();
 
         signInWithEmailAndPassword(auth, data.email, data.password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
-                
+                if (user.email) {
+                    const userData = await retrieveUserByEmail(user.email);
+                    if (userData) {
+                        await updateProfile(user, {
+                            displayName: userData.displayName,
+                            photoURL: userData.imgUrl,
+                        });
+                        router.push("/");
+                    }
+                }
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -94,6 +108,62 @@ export function LoginEmail() {
     );
 }
 
+export function LoginGoogle() {
+    const router = useRouter();
+
+    const onSubmit = async () => {
+        const provider = new GoogleAuthProvider();
+        const auth = initAuth();
+
+        await signInWithPopup(auth, provider)
+            .then(async (result) => {              
+                const user = result.user;
+                if (!user.email || !user.photoURL || !user.displayName) return;
+                const userData: AccountWithID = {
+                    displayName: user.displayName,
+                    email: user.email,
+                    id: user.uid,
+                    imgUrl: user.photoURL,
+                    username: user.displayName.replace(" ", ""),
+                    bio: 'No bio'
+                };
+                await storeOAuthUser(userData)
+                    .then(() => router.push("/"))
+                    .catch((err) => console.error(err));
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorMessage);
+            });
+    };
+
+    return (
+        <button
+            onClick={onSubmit}
+            className="flex w-full items-center justify-center gap-4 rounded-md bg-blue-500 py-2 font-semibold text-white"
+        >
+            <span>
+                <svg
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path d="M17.788 5.108A9 9 0 1 0 21 12h-8"></path>
+                </svg>
+            </span>
+            Log in with Google
+        </button>
+    );
+}
+
 export function LoginGithub() {
     const router = useRouter();
 
@@ -103,14 +173,9 @@ export function LoginGithub() {
 
         signInWithPopup(auth, provider)
             .then((result) => {
-                // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-                const credential =
-                    GithubAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
-
                 // The signed-in user info.
                 const user = result.user;
-                console.log("DIS? ", user);
+                console.log(user);
 
                 // IdP data available using getAdditionalUserInfo(result)
                 // ...
@@ -152,67 +217,6 @@ export function LoginGithub() {
                 </svg>
             </span>
             Log in with Github
-        </button>
-    );
-}
-
-export function LoginGoogle() {
-    const router = useRouter();
-
-    const onSubmit = () => {
-        const provider = new GoogleAuthProvider();
-        const auth = initAuth();
-
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-                const credential =
-                    GoogleAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
-
-                // The signed-in user info.
-                const user = result.user;
-                console.log("DIS? ", user);
-
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
-            })
-            .catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-
-                // The email of the user's account used.
-                const email = error.customData.email;
-                // The AuthCredential type that was used.
-                const credential =
-                    GithubAuthProvider.credentialFromError(error);
-                // ...
-                console.log("sdaasdsadsa", errorMessage);
-            });
-    };
-
-    return (
-        <button
-            onClick={onSubmit}
-            className="flex w-full items-center justify-center gap-4 rounded-md bg-blue-500 py-2 font-semibold text-white"
-        >
-            <span>
-                <svg
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path d="M17.788 5.108A9 9 0 1 0 21 12h-8"></path>
-                </svg>
-            </span>
-            Log in with Google
         </button>
     );
 }

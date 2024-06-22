@@ -4,8 +4,9 @@ export interface Account {
     displayName: string;
     imgUrl: string;
     bio: string;
+    id: string;
 }
 
-export interface LoggableAccount extends Account {
-    password: string;
+export interface AccountWithID extends Account {
+    id: string;
 }

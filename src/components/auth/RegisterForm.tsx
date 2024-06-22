@@ -1,14 +1,15 @@
 "use client";
 
-import { addUserToFirestore } from "@/lib/actions";
+import { storeEmailUser } from "@/lib/actions";
 import { initAuth } from "@/lib/firebase";
-import { LoggableAccount } from "@/lib/types";
+import { Account } from "@/lib/types";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface FormValues extends LoggableAccount {
+interface FormValues extends Account {
+    password: string;
     confirmPass?: string;
     id: string;
 }
@@ -32,7 +33,7 @@ export default function RegisterForm() {
             .then(async (userCredential) => {
                 data = {...data, id: userCredential.user.uid}
                 
-                await addUserToFirestore(data);
+                await storeEmailUser(data);
                 router.push('/login')
             })
             .catch((error) => {
