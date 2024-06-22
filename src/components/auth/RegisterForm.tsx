@@ -1,13 +1,16 @@
 "use client";
 
-import { signUp } from "@/lib/actions";
-import { RegisterableAccount } from "@/lib/types";
+import { addUserToFirestore } from "@/lib/actions";
+import { initAuth } from "@/lib/firebase/firebase";
+import { LoggableAccount } from "@/lib/types";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface FormValues extends RegisterableAccount {
+interface FormValues extends LoggableAccount {
     confirmPass?: string;
+    id: string;
 }
 
 export default function RegisterForm() {
@@ -15,30 +18,30 @@ export default function RegisterForm() {
         register,
         handleSubmit,
         formState: { errors },
-        reset,
         watch,
     } = useForm<FormValues>();
-    const [error, setError] = useState<string | undefined>("");
+    const [error, setError] = useState<boolean>(false);
 
     const router = useRouter();
 
-    const onSubmit: SubmitHandler<FormValues> = async (data, e) => {
-        e?.preventDefault();
-
-        delete data.confirmPass;
-
-        const registeredDoc = await signUp(data).catch((err) =>
-            console.error("Error: ", err),
-        );
-
-        if (registeredDoc?.status == 200) router.push("/login");
-        else {
-            setError(registeredDoc?.msg);
-            reset();
-        }
+    const onSubmit: SubmitHandler<FormValues> = (data) => {
+        setError(false)
+        delete data["confirmPass"];
+        const auth = initAuth();
+        createUserWithEmailAndPassword(auth, data.email, data.password)
+            .then(async (userCredential) => {
+                data = {...data, id: userCredential.user.uid}
+                
+                await addUserToFirestore(data);
+                router.push('/login')
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                if (errorCode === "auth/email-already-in-use") setError(true);
+            });
     };
 
-    const password = watch("password", "");
+    const checkPass = watch("password", "");
 
     return (
         <>
@@ -130,7 +133,7 @@ export default function RegisterForm() {
                             {...register("confirmPass", {
                                 required: "This field is required",
                                 validate: (value) =>
-                                    value === password ||
+                                    value === checkPass ||
                                     "Passwords do not match",
                             })}
                         />
@@ -141,7 +144,11 @@ export default function RegisterForm() {
                         )}
                     </div>
                 </div>
-                {error && <span className="text-xs text-red-500">{error}</span>}
+                {error && (
+                    <span className="text-xs text-red-500">
+                        Email already exists
+                    </span>
+                )}
                 <span className="text-center text-xs text-neutral-400">
                     By signing up, you agree to our Terms, Privacy Policy, and
                     Cookies Policy.

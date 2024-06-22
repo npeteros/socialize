@@ -1,5 +1,6 @@
 
 import { initializeApp, FirebaseOptions, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage"
 
@@ -13,7 +14,7 @@ const params: FirebaseOptions = {
 }
 
 export function initFirebase() {
-    
+
     if (getApps().length > 0) {
         return getApp();
     }
@@ -28,7 +29,7 @@ export function initFirebase() {
     })
 
 }
-
-export const initFirestore = (app: FirebaseApp) => getFirestore(app);
-
-export const initStorage = (app: FirebaseApp) => getStorage(app, params.storageBucket);
+const app = initFirebase();
+export const initAuth = () => getAuth(app);
+export const initFirestore = () => getFirestore(app);
+export const initStorage = () => getStorage(app, params.storageBucket);

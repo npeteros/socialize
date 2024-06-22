@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { LoginCredentials, LoginGithub } from "./Providers";
+import { LoginEmail, LoginGithub, LoginGoogle } from "./Providers";
 
 export default function LoginForm() {
     return (
         <div className="flex w-full flex-col gap-4">
-            {/* <LoginCredentials /> */}
+            <LoginEmail />
+            <LoginGoogle />
             <LoginGithub />
-            {/* <Link href="/" className="text-center text-xs">
+            <Link href="/" className="text-center text-xs">
                 Forgot password?
-            </Link> */}
+            </Link>
         </div>
     );
 }

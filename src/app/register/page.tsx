@@ -1,23 +1,13 @@
 "use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { RegisterForm } from "@/components/MainComponents";
 import { Dancing_Script } from "next/font/google";
 import Link from "next/link";
-import { sampleUser } from "@/lib/placeholder-data";
 
 const dancingScript = Dancing_Script({
     subsets: ["latin"],
 });
 
-export default function Login() {
-    const user = sampleUser
-    const router = useRouter();
-
-    useEffect(() => {
-        if (user) router.push("/");
-    }, [user, router]);
+export default function Register() {
 
     return (
         <div className="h-full min-h-lvh bg-white">

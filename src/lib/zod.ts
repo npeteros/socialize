@@ -1,8 +1,9 @@
 import { object, string } from "zod"
 
 export const signInSchema = object({
-    username: string({ required_error: "Username is required" })
-        .min(1, "Username is required"),
+    email: string({ required_error: "Email is required" })
+        .min(1, "Email is required")
+        .email("Enter a valid email address"),
     password: string({ required_error: "Password is required" })
         .min(1, "Password is required"),
 })
