@@ -1,10 +1,8 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { initAuth } from "@/lib/firebase";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { useEffect, useState } from "react";
 import UserAvatarSkeleton from "../skeletons/UserAvatarSkeleton";
+import useUser from "@/lib/hooks/useUser";
 
 export default function UserAvatar({
     src,
@@ -15,14 +13,7 @@ export default function UserAvatar({
     className?: string;
     onClick?: React.MouseEventHandler;
 }) {
-    const [user, setUser] = useState<User | null>(null);
-    const auth = initAuth();
-    
-    auth.authStateReady().then(() => {
-        if (auth.currentUser) {
-            setUser(auth.currentUser);
-        }
-    });
+    const user = useUser();
 
     return !user ? (
         <UserAvatarSkeleton />

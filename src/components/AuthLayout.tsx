@@ -1,27 +1,15 @@
 "use client";
 
-import { initAuth } from "@/lib/firebase";
 import { Sidebar } from "./MainComponents";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { User } from "firebase/auth";
 import AuthLayoutSkeleton from "./skeletons/AuthLayoutSkeleton";
+import useUser from "@/lib/hooks/useUser";
 
 export default function AuthLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const auth = initAuth();
-    const router = useRouter();
-    const [user, setUser] = useState<User>();
-
-    useEffect(() => {
-        auth.authStateReady().finally(() => {
-            if (!auth.currentUser) return router.push("/login");
-            else setUser(auth.currentUser);
-        });
-    }, [auth, router]);
+    const user = useUser();
 
     return !user ? <AuthLayoutSkeleton /> : (
         <div className="flex">

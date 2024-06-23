@@ -2,19 +2,11 @@
 
 import { useState } from "react";
 import UserAvatar from "./UserAvatar";
-import { User } from "firebase/auth";
-import { initAuth } from "@/lib/firebase";
+import useUser from "@/lib/hooks/useUser";
 
 export default function PostForm() {
     const [post, setPost] = useState("");
-    const [user, setUser] = useState<User | null>(null);
-    const auth = initAuth();
-
-    auth.authStateReady().then(() => {
-        if (auth.currentUser) {
-            setUser(auth.currentUser);
-        }
-    });
+    const user = useUser();
 
     return (
         <>
